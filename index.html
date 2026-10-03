@@ -3,13 +3,1133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>PS2 Launcher</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(0, 110, 255, 0.18), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(150, 0, 255, 0.18), transparent 30%),
+                radial-gradient(circle at 50% 100%, rgba(0, 80, 255, 0.12), transparent 40%),
+                #05060b;
+            overflow-x: hidden;
+        }
+
+        /* Animated background glow */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    120deg,
+                    transparent 0%,
+                    rgba(0, 140, 255, 0.03) 45%,
+                    rgba(150, 0, 255, 0.05) 55%,
+                    transparent 100%
+                );
+            animation: backgroundMove 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundMove {
+            from {
+                transform: translateX(-5%);
+            }
+
+            to {
+                transform: translateX(5%);
+            }
+        }
+
+        /* Main container */
+
+        .container {
+            width: min(1400px, 94%);
+            margin: auto;
+        }
+
+        /* Glass navigation */
+
+        .navbar {
+            position: sticky;
+            top: 18px;
+            z-index: 1000;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-top: 18px;
+            padding: 14px 20px;
+
+            border: 1px solid rgba(100, 170, 255, 0.25);
+            border-radius: 18px;
+
+            background: rgba(12, 16, 30, 0.72);
+            backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.45),
+                inset 0 0 25px rgba(70, 120, 255, 0.04);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 11px;
+
+            background: linear-gradient(135deg, #087cff, #812cff);
+
+            box-shadow:
+                0 0 18px rgba(40, 120, 255, 0.45),
+                0 0 35px rgba(130, 40, 255, 0.18);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links button,
+        .nav-button {
+            border: 0;
+            background: transparent;
+            color: #aeb8cf;
+
+            padding: 10px 14px;
+            border-radius: 10px;
+
+            cursor: pointer;
+            font-size: 14px;
+
+            transition: 0.25s ease;
+        }
+
+        .nav-links button:hover,
+        .nav-button:hover {
+            color: white;
+            background: rgba(70, 130, 255, 0.12);
+            box-shadow: 0 0 20px rgba(70, 130, 255, 0.12);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Search */
+
+        .search {
+            width: 210px;
+
+            padding: 11px 14px;
+
+            color: white;
+            outline: none;
+
+            border: 1px solid rgba(120, 160, 255, 0.18);
+            border-radius: 11px;
+
+            background: rgba(0, 0, 0, 0.25);
+
+            transition: 0.25s ease;
+        }
+
+        .search::placeholder {
+            color: #69738b;
+        }
+
+        .search:focus {
+            border-color: rgba(50, 140, 255, 0.65);
+
+            box-shadow:
+                0 0 20px rgba(30, 120, 255, 0.18),
+                inset 0 0 10px rgba(30, 120, 255, 0.05);
+        }
+
+        /* Hero */
+
+        .hero {
+            position: relative;
+
+            min-height: 430px;
+            margin-top: 28px;
+
+            display: flex;
+            align-items: center;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(100, 150, 255, 0.2);
+            border-radius: 25px;
+
+            background:
+                radial-gradient(circle at 75% 50%, rgba(100, 30, 255, 0.25), transparent 35%),
+                radial-gradient(circle at 30% 40%, rgba(0, 130, 255, 0.2), transparent 35%),
+                rgba(10, 13, 25, 0.75);
+
+            backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.45),
+                inset 0 0 60px rgba(50, 100, 255, 0.04);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            width: 55%;
+            padding: 55px;
+        }
+
+        .eyebrow {
+            color: #6eaaff;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 5vw, 72px);
+            line-height: 0.95;
+            margin-bottom: 20px;
+
+            background: linear-gradient(90deg, #ffffff, #8dbbff, #bd79ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            max-width: 580px;
+
+            color: #aab4ca;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .primary-button {
+            border: 0;
+            padding: 13px 23px;
+
+            border-radius: 11px;
+
+            color: white;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background: linear-gradient(135deg, #087cff, #7635ff);
+
+            box-shadow:
+                0 0 25px rgba(45, 110, 255, 0.35);
+
+            transition: 0.25s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px) scale(1.02);
+
+            box-shadow:
+                0 0 30px rgba(45, 110, 255, 0.55),
+                0 0 60px rgba(130, 40, 255, 0.18);
+        }
+
+        .secondary-button {
+            border: 1px solid rgba(130, 170, 255, 0.25);
+
+            padding: 13px 23px;
+
+            border-radius: 11px;
+
+            color: #dce5ff;
+            background: rgba(255, 255, 255, 0.04);
+
+            cursor: pointer;
+
+            transition: 0.25s ease;
+        }
+
+        .secondary-button:hover {
+            background: rgba(90, 130, 255, 0.12);
+            border-color: rgba(100, 160, 255, 0.5);
+        }
+
+        /* Fake game artwork */
+
+        .hero-art {
+            position: absolute;
+            right: 40px;
+            top: 35px;
+
+            width: 380px;
+            height: 360px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transform: rotate(-4deg);
+
+            border-radius: 22px;
+
+            background:
+                radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), transparent 15%),
+                linear-gradient(145deg, #111f4f, #21105c 50%, #080914);
+
+            border: 1px solid rgba(130, 180, 255, 0.3);
+
+            box-shadow:
+                -20px 30px 60px rgba(0, 0, 0, 0.55),
+                0 0 40px rgba(40, 100, 255, 0.2);
+
+            overflow: hidden;
+        }
+
+        .hero-art::before {
+            content: "PS2";
+
+            position: absolute;
+
+            font-size: 100px;
+            font-weight: 900;
+
+            color: rgba(255, 255, 255, 0.04);
+
+            transform: rotate(-10deg);
+        }
+
+        .hero-art-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero-art-content .controller {
+            font-size: 75px;
+            filter: drop-shadow(0 0 18px rgba(80, 140, 255, 0.65));
+        }
+
+        .hero-art-content h2 {
+            margin-top: 18px;
+            font-size: 28px;
+        }
+
+        .hero-art-content span {
+            display: block;
+            margin-top: 8px;
+            color: #8ba7df;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        /* Section headings */
+
+        .section {
+            margin-top: 42px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 23px;
+        }
+
+        .section-subtitle {
+            color: #68748c;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* Game grid */
+
+        .game-grid {
+            display: grid;
+
+            grid-template-columns: repeat(5, 1fr);
+
+            gap: 18px;
+        }
+
+        .game-card {
+            position: relative;
+
+            min-height: 250px;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(120, 160, 255, 0.12);
+
+            background: rgba(15, 18, 30, 0.75);
+
+            cursor: pointer;
+
+            transition:
+                transform 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.025);
+
+            border-color: rgba(80, 150, 255, 0.55);
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(50, 110, 255, 0.18);
+        }
+
+        .game-art {
+            height: 190px;
+
+            display: flex;
+            align-items: flex-end;
+
+            padding: 18px;
+
+            position: relative;
+
+            background:
+                linear-gradient(145deg, #10275e, #241050);
+        }
+
+        .game-card:nth-child(2) .game-art {
+            background: linear-gradient(145deg, #35114e, #101a52);
+        }
+
+        .game-card:nth-child(3) .game-art {
+            background: linear-gradient(145deg, #123f46, #15104a);
+        }
+
+        .game-card:nth-child(4) .game-art {
+            background: linear-gradient(145deg, #4b1d16, #18133e);
+        }
+
+        .game-card:nth-child(5) .game-art {
+            background: linear-gradient(145deg, #163e5d, #29164f);
+        }
+
+        .game-symbol {
+            font-size: 58px;
+
+            filter:
+                drop-shadow(0 0 12px rgba(120, 170, 255, 0.5));
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            opacity: 0;
+
+            background: rgba(3, 6, 16, 0.58);
+
+            transition: opacity 0.25s ease;
+        }
+
+        .game-card:hover .game-overlay {
+            opacity: 1;
+        }
+
+        .play-small {
+            padding: 10px 18px;
+
+            border-radius: 9px;
+
+            border: 1px solid rgba(130, 180, 255, 0.4);
+
+            background: rgba(20, 90, 255, 0.25);
+
+            color: white;
+            font-weight: bold;
+
+            box-shadow: 0 0 22px rgba(30, 110, 255, 0.25);
+        }
+
+        .game-info {
+            padding: 13px 14px;
+        }
+
+        .game-info h3 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .game-info p {
+            color: #68748c;
+            font-size: 12px;
+        }
+
+        /* Library */
+
+        #library {
+            display: none;
+        }
+
+        #library.visible {
+            display: block;
+        }
+
+        .library-panel {
+            padding: 25px;
+
+            border: 1px solid rgba(100, 150, 255, 0.18);
+            border-radius: 18px;
+
+            background: rgba(10, 14, 27, 0.75);
+
+            backdrop-filter: blur(18px);
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .library-game {
+            padding: 18px;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.035);
+
+            border: 1px solid rgba(120, 160, 255, 0.08);
+
+            color: #dce5ff;
+
+            transition: 0.2s ease;
+        }
+
+        .library-game:hover {
+            border-color: rgba(80, 150, 255, 0.4);
+            background: rgba(70, 120, 255, 0.08);
+        }
+
+        /* Footer */
+
+        footer {
+            margin: 60px 0 30px;
+
+            text-align: center;
+
+            color: #515b70;
+            font-size: 12px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1100px) {
+
+            .hero-content {
+                width: 60%;
+            }
+
+            .hero-art {
+                right: -50px;
+                opacity: 0.55;
+            }
+
+            .game-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .library-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .search {
+                width: 160px;
+            }
+
+            .hero-content {
+                width: 100%;
+                padding: 35px;
+            }
+
+            .hero-art {
+                opacity: 0.2;
+                right: -100px;
+            }
+
+            .game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .library-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .game-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .game-art {
+                height: 150px;
+            }
+
+            .game-card {
+                min-height: 205px;
+            }
+
+            .hero {
+                min-height: 500px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .nav-actions {
+                width: 100%;
+            }
+
+            .search {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>PS2 Launcher</h1>
-    <p>Our PS2 launcher is starting here.</p>
+<div class="container">
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            <div class="logo-icon">◈</div>
+            PS2 LAUNCHER
+        </div>
+
+        <div class="nav-links">
+            <button onclick="scrollToTop()">HOME</button>
+            <button onclick="showLibrary()">LIBRARY</button>
+            <button onclick="scrollToRecent()">RECENT</button>
+        </div>
+
+        <div class="nav-actions">
+
+            <input
+                id="searchInput"
+                class="search"
+                type="text"
+                placeholder="🔍 Search games..."
+                oninput="searchGames()"
+            >
+
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                PLAYSTATION 2 • EMULATION HUB
+            </div>
+
+            <h1>
+                YOUR<br>
+                PS2 LIBRARY
+            </h1>
+
+            <p>
+                A modern dark-neon arcade launcher for organizing,
+                discovering, and eventually playing your PlayStation 2
+                collection.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button
+                    class="primary-button"
+                    onclick="showLibrary()"
+                >
+                    📚 OPEN LIBRARY
+                </button>
+
+                <button
+                    class="secondary-button"
+                    onclick="scrollToRecent()"
+                >
+                    🕹️ RECENTLY PLAYED
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-art">
+
+            <div class="hero-art-content">
+
+                <div class="controller">
+                    🎮
+                </div>
+
+                <h2>PLAYSTATION 2</h2>
+
+                <span>DARK NEON EDITION</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECENTLY PLAYED -->
+
+    <section
+        id="recent"
+        class="section"
+    >
+
+        <div class="section-header">
+
+            <div>
+                <h2 class="section-title">
+                    Recently Played
+                </h2>
+
+                <p class="section-subtitle">
+                    Jump back into your games
+                </p>
+            </div>
+
+            <button
+                class="nav-button"
+                onclick="showLibrary()"
+            >
+                VIEW ALL →
+            </button>
+
+        </div>
+
+
+        <div
+            id="gameGrid"
+            class="game-grid"
+        >
+
+            <div class="game-card" data-name="Gran Turismo 4">
+
+                <div class="game-art">
+
+                    <div class="game-symbol">
+                        🏎️
+                    </div>
+
+                    <div class="game-overlay">
+                        <div class="play-small">
+                            ▶ PLAY
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="game-info">
+                    <h3>Gran Turismo 4</h3>
+                    <p>Racing • PS2</p>
+                </div>
+
+            </div>
+
+
+            <div class="game-card" data-name="Final Fantasy X">
+
+                <div class="game-art">
+
+                    <div class="game-symbol">
+                        ⚔️
+                    </div>
+
+                    <div class="game-overlay">
+                        <div class="play-small">
+                            ▶ PLAY
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="game-info">
+                    <h3>Final Fantasy X</h3>
+                    <p>RPG • PS2</p>
+                </div>
+
+            </div>
+
+
+            <div class="game-card" data-name="God of War">
+
+                <div class="game-art">
+
+                    <div class="game-symbol">
+                        ⚡
+                    </div>
+
+                    <div class="game-overlay">
+                        <div class="play-small">
+                            ▶ PLAY
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="game-info">
+                    <h3>God of War</h3>
+                    <p>Action • PS2</p>
+                </div>
+
+            </div>
+
+
+            <div class="game-card" data-name="Resident Evil 4">
+
+                <div class="game-art">
+
+                    <div class="game-symbol">
+                        🧟
+                    </div>
+
+                    <div class="game-overlay">
+                        <div class="play-small">
+                            ▶ PLAY
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="game-info">
+                    <h3>Resident Evil 4</h3>
+                    <p>Horror • PS2</p>
+                </div>
+
+            </div>
+
+
+            <div class="game-card" data-name="Need for Speed Underground 2">
+
+                <div class="game-art">
+
+                    <div class="game-symbol">
+                        🚗
+                    </div>
+
+                    <div class="game-overlay">
+                        <div class="play-small">
+                            ▶ PLAY
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="game-info">
+                    <h3>Need for Speed Underground 2</h3>
+                    <p>Racing • PS2</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LIBRARY -->
+
+    <section
+        id="library"
+        class="section"
+    >
+
+        <div class="library-panel">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2 class="section-title">
+                        PS2 Game Library
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Your games will appear here
+                    </p>
+
+                </div>
+
+                <button
+                    class="secondary-button"
+                    onclick="hideLibrary()"
+                >
+                    CLOSE
+                </button>
+
+            </div>
+
+
+            <div
+                id="libraryGrid"
+                class="library-grid"
+            >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        PS2 Launcher • Dark Neon Arcade
+    </footer>
+
+</div>
+
+
+<script>
+
+    /*
+     * SAMPLE LIBRARY
+     *
+     * This is intentionally just sample data.
+     * Later we'll replace this with a proper game database.
+     */
+
+    const games = [
+
+        "Gran Turismo 4",
+        "Final Fantasy X",
+        "God of War",
+        "God of War II",
+        "Resident Evil 4",
+        "Need for Speed Underground",
+        "Need for Speed Underground 2",
+        "Shadow of the Colossus",
+        "Kingdom Hearts",
+        "Kingdom Hearts II",
+        "Metal Gear Solid 2",
+        "Metal Gear Solid 3",
+        "Tekken 5",
+        "Guitar Hero",
+        "Tony Hawk's Underground",
+        "Burnout 3",
+        "Jak II",
+        "Ratchet & Clank",
+        "Dragon Ball Z",
+        "Grand Theft Auto"
+    ];
+
+
+    /*
+     * BUILD LIBRARY
+     */
+
+    function buildLibrary() {
+
+        const libraryGrid =
+            document.getElementById("libraryGrid");
+
+        libraryGrid.innerHTML = "";
+
+        games.forEach(function(game) {
+
+            const item =
+                document.createElement("div");
+
+            item.className = "library-game";
+
+            item.textContent = "🎮 " + game;
+
+            libraryGrid.appendChild(item);
+
+        });
+
+    }
+
+
+    /*
+     * OPEN LIBRARY
+     */
+
+    function showLibrary() {
+
+        const library =
+            document.getElementById("library");
+
+        library.classList.add("visible");
+
+        buildLibrary();
+
+        library.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /*
+     * CLOSE LIBRARY
+     */
+
+    function hideLibrary() {
+
+        const library =
+            document.getElementById("library");
+
+        library.classList.remove("visible");
+
+    }
+
+
+    /*
+     * SCROLL HOME
+     */
+
+    function scrollToTop() {
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /*
+     * SCROLL RECENT
+     */
+
+    function scrollToRecent() {
+
+        document
+            .getElementById("recent")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+
+    /*
+     * SEARCH
+     */
+
+    function searchGames() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase()
+                .trim();
+
+        const cards =
+            document.querySelectorAll(".game-card");
+
+        cards.forEach(function(card) {
+
+            const name =
+                card.dataset.name.toLowerCase();
+
+            if (name.includes(search)) {
+
+                card.style.display = "";
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+</script>
 
 </body>
 </html>
