@@ -1022,8 +1022,12 @@
 
             item.className = "library-game";
 
-            item.textContent = "🎮 " + game;
-
+            const img = document.createElement("img");
+img.src = game === "Need for Speed Underground 2"
+    ? "covers/nfs-underground-2.jpg"
+    : "covers/" + game.toLowerCase().replaceAll(" ", "-") + ".jpg";
+img.alt = game;
+item.appendChild(img);
             libraryGrid.appendChild(item);
 
         });
