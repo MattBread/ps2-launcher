@@ -1133,7 +1133,18 @@ item.appendChild(img);
 
     }
 function testLaunch(game) {
-    alert(game + " is ready to launch, but no local game file is available yet.");
+    fetch("http://localhost:8765/status")
+        .then(function(response) {
+            if (response.ok) {
+                alert("Local PS2 launcher is connected!");
+            } else {
+                alert("Local launcher responded, but is not ready.");
+            }
+        })
+        .catch(function() {
+            alert("Local PS2 launcher is not running.");
+        });
+}
 }
 </script>
 
